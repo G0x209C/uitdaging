@@ -28,15 +28,15 @@
     </div>
   </nav>
   <div>
-<!--    <div class="container">-->
-<!--      <div class="jumbotron">-->
-<!--        <div class="d-flex justify-content-center rounded bg-dark bg-opacity-75 mb-2 text-white">-->
-<!--          <div v-bind:class="{'text-danger': this.msgIsError}">-->
-<!--            {{ msg }}-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="container">-->
+    <!--      <div class="jumbotron">-->
+    <!--        <div class="d-flex justify-content-center rounded bg-dark bg-opacity-75 mb-2 text-white">-->
+    <!--          <div v-bind:class="{'text-danger': this.msgIsError}">-->
+    <!--            {{ msg }}-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <router-view v-slot="{ Component }">
       <keep-alive>
         <component :is="Component"></component>
@@ -48,10 +48,11 @@
 </template>
 
 <style>
-body{
-  padding-top:3.0rem;
+body {
+  padding-top: 3.0rem;
   background-color: royalblue;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -75,18 +76,56 @@ body{
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
+import {useCookies} from "vue3-cookies";
 
-export default{
-  methods:{
-    logOut(){
-      console.log('haha');
+export default {
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
+  computed: {
+    ...mapGetters(['getPlayer', 'getError']),
+    player() {
+      return this.getPlayer;
+    },
+    anError(){
+      return this.getError;
     }
   },
-  computed:{
-    ...mapGetters(['getPlayer']),
-    player(){
-      return this.getPlayer;
+  watch:{
+    anError(){
+      if(this.anError){
+        this.unsetPlayer();
+        this.cookies.remove('secret');
+        this.$router.push({name: 'Start', params: {msg: 'User Expired', isError: true}})
+      }
+    }
+  },
+  methods: {
+    ...mapActions(['unsetPlayer']),
+    logOut() {
+      let player = this.player;
+      let secret = this.cookies.get('secret');
+      this.$io.socket.post('/api/logout', {secret: secret}, (res, jwres) => {
+      });
+      this.unsetPlayer();
+      this.cookies.remove('secret');
+      this.$router.push({name: 'Start', params: {msg: 'User logged out'}})
+    }
+  },
+  mounted() {
+    // has session cookie, init data.
+    if (this.cookies.get('secret')) {
+      // initialize data with the secret and join the socket to room.
+      this.$io.socket.post('/initdata', {secret: this.cookies.get('secret')}, (res, jwres) => {
+      });
+      this.$io.socket.post('/joinroom', {secret: this.cookies.get('secret')}, (res, jwres) => {
+        if (!res.status) {
+          console.log(res.message);
+        }
+      })
+      this.$router.push('/lobby');
     }
   }
 }

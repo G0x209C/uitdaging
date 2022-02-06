@@ -1,28 +1,51 @@
 const {v4} = require('uuid');
+const formatchat = require('../misc/formatchat');
 module.exports={
   attributes:{
     secret: {type:'string', unique:true, required: true},
     name: {type:'string', required:true},
     isHost: {type:'boolean', defaultsTo:false},
+    score: {type:'number', defaultsTo: 0},
     room: {model:'room',},
     messages: {collection:'message', via: 'player'}
   },
+  /**
+   * @author G0x209C
+   * @params name, isHost, roomId
+   * @description creates new user
+   * @returns Player->allAssociations
+   */
   newPlayer: async(name, isHost, roomId)=>{
-    let player = await Player.create({secret:v4(), name:name, isHost:isHost, room:roomId}).catch(err=>{throw err;});
+    let player = await Player.create({secret:v4(), name:name, isHost:isHost, room:roomId}).fetch().catch(err=>{throw err;});
 
+    // have to retrieve player again for associations.
     return await Player.findOne({id:player.id}).populateAll().catch(err=>{throw err;});
   },
   /**
-   * @params id, msg
-   * @description creates message for player and uses helper to broadcast.
+   * @author G0x209C
+   * @params playerId, msg, req
+   * @description creates message for player broadcasts to other players
    */
-  say: async(id, msg)=>{
-    let player = await Player.findOne({id:id}).populate('room')
-      .catch(err=>{throw err});
-    // broadcast message to room.
-    await sails.helpers.chatsocket(
-      player.room.code, // player's room
-      await Message.create({player: player.id, name:player.name, msg:msg, room:player.room.id}).fetch() // create message and pass it to socket-helper.
-    );
+  say: async(playerId, msg, req)=>{
+    // get player
+    let player = await Player.findOne({id:playerId}).populate('room')
+      .catch(err=>{throw err;});
+    // create message with player;
+    let message = await Message.create({player: player.id, message:msg, room:player.room.id}).fetch();
+    // broadcast message to room using helper.
+    sails.sockets.broadcast(player.room.code, 'newmessage', formatchat(player, message), req);
+  },
+  /**
+   * @author G0x209C
+   * @param playerId
+   * @description get the code of the room linked to the player.
+   * @returns player.room.code
+   */
+  getRoomCode: async(playerId)=>{
+    return await Player.findOne({id:playerId}).populate('room')
+      .then(player=>{
+        return player.room.code;
+      })
+      .catch(err=>{throw err;});
   }
 };

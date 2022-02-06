@@ -13,7 +13,7 @@
       <h4>Login to application</h4>
     </div>
     <hr>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center" v-if="this.$route.params.msg">
       <div v-bind:class="{'text-danger': this.$route.params.isError}">{{ this.$route.params.msg }}</div>
     </div>
     <div class="d-flex justify-content-center">
@@ -22,7 +22,7 @@
 
     <form @submit.prevent="sendLogin">
       <div class="d-flex p-3 m-auto justify-content-center">
-        <input type="text" class="input-group-text ms-2" v-model="naam" placeholder="naam">
+        <input type="text" class="input-group-text ms-2" v-model="name" placeholder="naam" required>
         <input type="text" class="input-group-text ms-2" v-model="code" placeholder="Kamercode (optioneel)">
       </div>
       <div class="d-flex p-3 m-auto justify-content-center">
@@ -41,11 +41,34 @@ body{
 </style>
 
 <script>
+import {useCookies} from 'vue3-cookies';
+
 export default {
+  setup(){
+    const {cookies} = useCookies();
+    return {cookies};
+  },
   mounted(){
-    this.$io.socket.post('/test', {}, (data,jwres)=>{
-      console.log(jwres);
-    });
+  },
+  methods:{
+    sendLogin(){
+      this.$io.socket.post('/api/register', {name:this.name, code:this.code}, (res,jwres)=>{
+        if(jwres.statusCode===200){
+          // set the secret as a cookie.
+          this.cookies.set('secret', res.secret);
+          // initialize data with the secret and join the socket to room.
+          this.$io.socket.post('/initdata', {secret:res.secret}, (res,jwres)=>{});
+          this.$io.socket.post('/joinroom', {secret:res.secret}, (res,jwres)=>{
+            if(!res.status){
+              console.log(res.message);
+            }
+          })
+          this.$router.push('/lobby');
+        }else{
+          console.log(jwres.error);
+        }
+      });
+    }
   },
   data(){
     return {
