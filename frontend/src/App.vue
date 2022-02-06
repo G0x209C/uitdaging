@@ -19,7 +19,7 @@
             <router-link class="nav-link" to="/about">Over uitdaging</router-link>
           </li>
         </ul>
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0" >
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0" v-if="player">
           <li class="nav-item">
             <a class="nav-link anchors" @click.prevent="logOut()">Logout</a>
           </li>
