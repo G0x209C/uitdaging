@@ -8,7 +8,7 @@ let csrf;
 const isProductionEnvironment = (process.env.NODE_ENV === 'production');
 
 if (isProductionEnvironment) {
-    url = ``; //TODO: set production url.
+    url = `https://mighty-mountain-72687.herokuapp.com/`; //TODO: set production url.
 } else url = 'http://localhost:1337';
 
 
