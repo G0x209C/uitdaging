@@ -1,5 +1,6 @@
 
 module.exports={
+    namespaced:true,
     state:{
         scoreboard:[]
     },
@@ -17,6 +18,9 @@ module.exports={
         removePlayer(state, payload){
             // remove player object
             state.scoreboard.splice(state.scoreboard.indexOf(payload),1);
+        },
+        clearScoreboard(state){
+            state.scoreboard = [];
         }
     },
     actions:{
@@ -31,6 +35,9 @@ module.exports={
         // remove a player from scoreboard;
         removePlayer(state, payload){
             state.commit('removePlayer', payload);
+        },
+        clearScoreboard(state){
+            state.commit('clearScoreboard');
         }
     },
     getters:{
