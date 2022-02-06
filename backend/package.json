@@ -1,14 +1,17 @@
 {
-  "name": "backend",
+  "name": "uitdagingapi",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
-  "keywords": [],
+  "version": "0.0.1",
+  "description": "Uitdaging API",
+  "keywords": ["api", "uitdaging"],
   "dependencies": {
+    "@sailshq/lodash": "^3.10.3",
     "sails": "^1.5.0",
     "sails-hook-orm": "^4.0.0",
     "sails-hook-sockets": "^2.0.0",
-    "@sailshq/lodash": "^3.10.3"
+    "sails-mongo": "^2.0.0",
+    "sails-mysql": "^2.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "5.16.0"
@@ -24,7 +27,7 @@
     "type": "git",
     "url": "git://github.com/gc/backend.git"
   },
-  "author": "gc",
+  "author": "GJ Collette",
   "license": "",
   "engines": {
     "node": "^17.4"

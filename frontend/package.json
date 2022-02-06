@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "uitdagingfrontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,8 +8,12 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "jquery": "^3.6.0",
+    "sails.io.js": "^1.2.1",
+    "socket.io-client": "^2.4.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue3-cookies": "^1.0.6",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
@@ -18,5 +22,6 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0"
-  }
+  },
+  "author": "GJ Collette"
 }
