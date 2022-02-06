@@ -12,6 +12,10 @@
  * them on a project-wide or per-model basis, see:
  * https://sailsjs.com/docs/concepts/models-and-orm/model-settings
  */
+let id = { type: 'number', autoIncrement: true, };
+if(process.env.NODE_ENV === 'production'){
+  id = { type: 'string', columnName: '_id', };
+}
 
 module.exports.models = {
 
@@ -71,7 +75,7 @@ module.exports.models = {
   attributes: {
     createdAt: { type: 'number', autoCreatedAt: true, },
     updatedAt: { type: 'number', autoUpdatedAt: true, },
-    id: { type: 'number', autoIncrement: true, },
+    id: id,
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:

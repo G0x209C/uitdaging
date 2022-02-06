@@ -15,6 +15,7 @@ module.exports.routes = {
   'GET /csrfToken': {action: 'security/grant-csrf-token'},
 
   'POST /initdata': {action: 'initdata'},
+  'POST /joinroom': {controller: 'RoomController', action: 'joinSocketRoom'},
 
   /**
    * Player-specific routes.
@@ -26,7 +27,7 @@ module.exports.routes = {
   /**
    * Chat-specific routes.
    */
-  'POST /api/retrievemessages': {controller: 'MessageController', action: 'getMessages'},
-  'POST /api/sendmessage': {controller: 'MessageController', action: 'sendMessage'},
+  'POST /chat/retrievemessages': {controller: 'MessageController', action: 'getMessages'},
+  'POST /chat/sendmessage': {controller: 'MessageController', action: 'sendMessage'},
 
 };

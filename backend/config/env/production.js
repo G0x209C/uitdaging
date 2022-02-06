@@ -59,6 +59,8 @@ module.exports = {
       //  ```
       //--------------------------------------------------------------------------
 
+      adapter:'sails-mongo',
+      url: 'mongodb+srv://sails:123@schoolproject.fhmft.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
       /****************************************************************************
       *                                                                           *
       * More adapter-specific options                                             *
@@ -102,6 +104,9 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     // cascadeOnDestroy: false,
+
+
+
 
   },
 
@@ -148,9 +153,11 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cors: {
-      // allowOrigins: [
-      //   'https://example.com',
-      // ]
+      allowOrigins: [
+        'http://213.126.50.126',
+        'http://213.126.50.126:8080',
+        'http://localhost:8080'
+      ]
     },
 
   },
@@ -250,10 +257,11 @@ module.exports = {
     * > Be sure to use the right protocol!  ("http://" vs. "https://")         *
     *                                                                          *
     ***************************************************************************/
-    // onlyAllowOrigins: [
-    //   'https://example.com',
-    //   'https://staging.example.com',
-    // ],
+    onlyAllowOrigins: [
+      'http://213.126.50.126',
+      'http://213.126.50.126:8080',
+      'http://localhost:8080',
+    ],
 
 
     /***************************************************************************
@@ -325,7 +333,7 @@ module.exports = {
     * (https://sailsjs.com/config/http)                                        *
     *                                                                          *
     ***************************************************************************/
-    // trustProxy: true,
+    trustProxy: true,
 
   },
 
@@ -374,7 +382,7 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   custom: {
-    baseUrl: 'https://example.com',
+    baseUrl: 'https://mighty-mountain-72687.herokuapp.com/',
     internalEmailAddress: 'support@example.com',
 
     // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
