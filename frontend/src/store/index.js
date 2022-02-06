@@ -9,18 +9,24 @@ import games from '@/store/games';
 // importing plugins
 import createDataInitializer from "@/store/plugins/initializeDataPlugin";
 import createChatSocketPlugin from "@/store/plugins/chatSocketPlugin";
+import createScoreboardSocketPlugin from "@/store/plugins/scoreboardSocketPlugin";
 
 // creating plugin instances
 const dataInitPlugin = createDataInitializer(io.socket);
 const chatPlugin = createChatSocketPlugin(io.socket);
+const scoreboardPlugin = createScoreboardSocketPlugin(io.socket);
 
 export default createStore({
     state: {
         player:false,
+        error: false,
     },
     mutations: {
         setPlayer(state, payload){
             state.player = payload;
+        },
+        setError(state, payload){
+            state.error = payload;
         },
         unsetPlayer(state){
             state.player = false;
@@ -32,6 +38,8 @@ export default createStore({
         },
         unsetPlayer(state){
             state.commit('unsetPlayer');
+            state.commit('chat/clearMessages');
+            state.commit('scoreboard/clearScoreboard');
         }
     },
     modules: {
@@ -41,9 +49,11 @@ export default createStore({
     },
     plugins:[
         dataInitPlugin,
-        chatPlugin
+        chatPlugin,
+        scoreboardPlugin
     ],
     getters: {
-        getPlayer: state=>state.player
+        getPlayer: state => state.player,
+        getError: state => state.error
     }
 })
