@@ -10,5 +10,23 @@
 
 module.exports.routes = {
 
+  'POST /test': {action: 'test'},
+
+  'GET /csrfToken': {action: 'security/grant-csrf-token'},
+
+  'POST /initdata': {action: 'initdata'},
+
+  /**
+   * Player-specific routes.
+   */
+
+  'POST /api/register': {controller: 'PlayerController', action: 'registerPlayer'},
+  'POST /api/logout': {controller: 'PlayerController', action: 'logout'},
+
+  /**
+   * Chat-specific routes.
+   */
+  'POST /api/retrievemessages': {controller: 'MessageController', action: 'getMessages'},
+  'POST /api/sendmessage': {controller: 'MessageController', action: 'sendMessage'},
 
 };
