@@ -15,6 +15,13 @@ globalCookiesConfig({
     sameSite: "Lax",
 });
 
+let gameHost = 'http://localhost';
+if(process.env.NODE_ENV === 'production'){ // if in production, link will be here.
+    gameHost = 'http://213.126.50.126';
+}
+
+app.config.globalProperties.$gameHost = gameHost;
+
 app.config.globalProperties.$io = io;
 
 app.mount('#app')

@@ -13,7 +13,7 @@ module.exports = {
    * @author G0x209C
    * @params name, code (optional)
    * @description registers a new player to the database
-   * @returns {success, message, }
+   * @returns JSON{success, message, player}
    */
   registerPlayer:{
 
@@ -46,12 +46,12 @@ module.exports = {
         // check if room exists; Type bool
         let room = await Room.checkRoomExists(inputs.code);
         if(room) {
+          // replace bool with instance of room.
+          room = await Room.findOne({code: inputs.code}).catch(err => {
+            throw err;
+          });
           // check how many members are already assigned to room
           if ((await Room.memberCount(room.id)) < 6) {
-            // replace bool with instance of room.
-            room = await Room.findOne({code: inputs.code}).catch(err => {
-              throw err;
-            });
             // create player
             player = await Player.newPlayer(inputs.name, false, room.id);
 

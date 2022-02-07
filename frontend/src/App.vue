@@ -21,7 +21,7 @@
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0" v-if="player">
           <li class="nav-item">
-            <a class="nav-link anchors" @click.prevent="logOut()">Logout</a>
+            <a class="nav-link mousepointer" @click.prevent="logOut()">Logout</a>
           </li>
         </ul>
       </div>
@@ -72,6 +72,10 @@ body {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.mousepointer{
+  cursor: pointer;
 }
 </style>
 

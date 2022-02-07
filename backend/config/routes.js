@@ -24,6 +24,12 @@ module.exports.routes = {
   'POST /api/register': {controller: 'PlayerController', action: 'registerPlayer'},
   'POST /api/logout': {controller: 'PlayerController', action: 'logout'},
 
+
+  /**
+   * Room-specific routes.
+   */
+  'POST /api/setgame': {controller: 'RoomController', action: 'setGame'},
+
   /**
    * Chat-specific routes.
    */

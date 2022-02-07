@@ -6,5 +6,6 @@
  */
 
 module.exports = function formatchat(player, message){
-  return {name: player.name, isHost: player.isHost, message: message};
+  let playerobj = player;
+  return {name: playerobj.name, isHost: playerobj.isHost, message: message};
 };

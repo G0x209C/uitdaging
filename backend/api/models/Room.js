@@ -19,6 +19,8 @@ module.exports = {
         let result = [];
         if(messages.length){
           for (let i = 0; i < messages.length; i++) {
+            console.log(messages[i]);
+            console.log(formatchat(messages[i].player), messages[i].message);
             result.push(formatchat(messages[i].player, messages[i].message));
           }
         }
