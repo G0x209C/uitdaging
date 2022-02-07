@@ -30,10 +30,13 @@ module.exports={
     // get player
     let player = await Player.findOne({id:playerId}).populate('room')
       .catch(err=>{throw err;});
+
     // create message with player;
     let message = await Message.create({player: player.id, message:msg, room:player.room.id}).fetch();
+
     // broadcast message to room using helper.
-    sails.sockets.broadcast(player.room.code, 'newmessage', formatchat(player, message), req);
+    let returnObj = formatchat(player, message.message);
+    sails.sockets.broadcast(player.room.code, 'newmessage', returnObj, req);
   },
   /**
    * @author G0x209C
