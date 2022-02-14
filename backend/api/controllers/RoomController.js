@@ -40,9 +40,14 @@ module.exports = {
             throw err;
           });
         if (player) {
+          let error;
           sails.sockets.join(env.req, player.room.code, (err)=>{
-            return env.res.serverError(err);
+            error = err;
           });
+          // if error in joining room: send serverError.
+          // would not work from anonymous function, need external variable.
+          if(error) return env.res.serverError(error);
+
           return env.res.json({
             success: true,
             message: 'successfully joined room'
@@ -101,9 +106,14 @@ module.exports = {
           .catch(err => {
             throw err;
           });
+        let error;
         sails.sockets.leave(env.req, player.room.code, (err)=>{
-          return env.res.serverError(err);
+          error = err;
         });
+        // if error in leaving room: send serverError.
+        // would not work from anonymous function, need external variable.
+        if(error) return env.res.serverError(error);
+
         return env.res.json({
           success: true,
           message: 'successfully joined room'
