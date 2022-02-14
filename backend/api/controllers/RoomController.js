@@ -40,7 +40,9 @@ module.exports = {
             throw err;
           });
         if (player) {
-          sails.sockets.join(env.req, player.room.code);
+          sails.sockets.join(env.req, player.room.code, (err)=>{
+            return env.res.serverError(err);
+          });
           return env.res.json({
             success: true,
             message: 'successfully joined room'
@@ -99,7 +101,9 @@ module.exports = {
           .catch(err => {
             throw err;
           });
-        sails.sockets.leave(env.req, player.room.code);
+        sails.sockets.leave(env.req, player.room.code, (err)=>{
+          return env.res.serverError(err);
+        });
         return env.res.json({
           success: true,
           message: 'successfully joined room'
