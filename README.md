@@ -22,23 +22,25 @@ The backend is build upon the following:
 > - Waterline ORM (included with Sails.JS)
 > - UUID (8.3.2)
 
-## To install the dependencies for both backend and frontend, run:
+---
+# Installation/Usage
+### To install the dependencies for both backend and frontend, run:
 ```
 sudo npm i -g sails
 npm run install
 ```
 
-## To run the server:
+### To run the server:
 ```
 npm run server
 ```
 
-## To run the client:
+### To run the client:
 ```
 npm run client
 ```
 
-## To run both at the same time using concurrently:
+### To run both at the same time using concurrently:
 First run:
  ```
  sudo npm i -g concurrently
