@@ -1,6 +1,6 @@
 {
   "name": "uitdagingfrontend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -23,5 +23,5 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0"
   },
-  "author": "GJ Collette"
+  "author": "GJ Collette (G0x209C)"
 }
