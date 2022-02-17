@@ -40,7 +40,14 @@ module.exports = {
             throw err;
           });
         if (player) {
-          sails.sockets.join(env.req, player.room.code);
+          let error;
+          sails.sockets.join(env.req, player.room.code, (err)=>{
+            error = err;
+          });
+          // if error in joining room: send serverError.
+          // would not work from anonymous function, need external variable.
+          if(error) return env.res.serverError(error);
+
           return env.res.json({
             success: true,
             message: 'successfully joined room'
@@ -99,7 +106,14 @@ module.exports = {
           .catch(err => {
             throw err;
           });
-        sails.sockets.leave(env.req, player.room.code);
+        let error;
+        sails.sockets.leave(env.req, player.room.code, (err)=>{
+          error = err;
+        });
+        // if error in leaving room: send serverError.
+        // would not work from anonymous function, need external variable.
+        if(error) return env.res.serverError(error);
+
         return env.res.json({
           success: true,
           message: 'successfully joined room'
@@ -135,88 +149,89 @@ module.exports = {
 
 
     inputs: {
-      secret: {type: 'string', required: false},
+      secret: {type: 'string', required: true},
       gameId: {type: 'string', required: true}
     },
 
 
     exits: {
       roomNotFound: {
-        success:false,
-        message:'No room was found for the player, logout (this session is invalid)'
+        success: false,
+        message: 'No room was found for the player, logout (this session is invalid)'
       },
-      playerNotFound:{
+      playerNotFound: {
         success: false,
         message: 'Player was not found in database, logout (this session is invalid)'
       },
-      playerNotHost:{
+      playerNotHost: {
         success: false,
         message: 'It seems you are not the host of this lobby.'
       },
       lackingIdentifier: {
-        success:false,
-        message:'Lacking identifier'
+        success: false,
+        message: 'Lacking identifier'
       }
     },
 
 
     fn: async function (inputs, exits, env) {
 
-      if(!env.req.isSocket){
+      if (!env.req.isSocket) {
         throw {badRequest: 'Connection is not a socket'};
       }
 
-      if(inputs.secret){
-        let gameid;
-        let datastore = sails.getDatastore();
-        switch(datastore.config.adapter){
-          case 'sails-mysql':
-            gameid = parseInt(inputs.gameId);
-            break;
-          case 'sails-mongo':
-            gameid = inputs.gameId;
-            break;
-        }
-
-        // check if game id is filled
-        if(gameid){
-          // get the player to check for host and get the room code;
-          let player = await Player.findOne({secret:inputs.secret}).catch(err=>{throw err;});
-          let roomcode = await Player.getRoomCode(player.id);
-          if(player){
-            if(roomcode){
-              if(!player.isHost){ // if player is not host, return custom error message
-                return env.res.json({success: false,
-                  message: 'It seems you are not the host of this lobby.'});
-              }
-
-              let game = await Game.findOne({id:gameid}).catch(err=>{throw err;});
-
-              if(!game){ // game not found, should not happen, return serverError
-                return env.res.serverError('Game was not found, contact the developer at ');
-              }
-
-              console.log(roomcode);
-              console.log(game);
-              await sails.sockets.broadcast(roomcode, 'startgame', game);
-
-            }else{ // player was not associated to room, return custom error message
-              return env.res.json({success:false,
-                message:'No room was found for the player, logout (this session is invalid)'});
-            }
-          }else{ // player was not found in database, return custom error message
-            return env.res.json({success: false,
-              message: 'Player was not found in database, logout (this session is invalid)'});
-          }
-        }
-      }else{ // inputs.secret was not provided, return custom error message
-        return env.res.json({success:false,
-          message:'Lacking identifier, logout of application'});
+      let gameid;
+      let datastore = sails.getDatastore();
+      // check the datastore, if mysql: parse the number Primary Key.
+      switch (datastore.config.adapter) {
+        case 'sails-mysql':
+          gameid = parseInt(inputs.gameId);
+          break;
+        case 'sails-mongo':
+          gameid = inputs.gameId;
+          break;
       }
+
+      if (!gameid) return;
+
+
+      // get the player to check for host and get the room code;
+      let player = await Player.findOne({secret: inputs.secret}).catch(err => {
+        throw err;
+      });
+      let roomcode = await Player.getRoomCode(player.id);
+      if (!player) {
+        return env.res.json({
+          success: false,
+          message: 'Player was not found in database, logout (this session is invalid)'
+        });
+      }
+      if (!roomcode) {
+        return env.res.json({
+          success: false,
+          message: 'No room was found for the player, logout (this session is invalid)'
+        });
+      }
+
+      if (!player.isHost) { // if player is not host, return custom error message
+        return env.res.json({
+          success: false,
+          message: 'It seems you are not the host of this lobby.'
+        });
+      }
+
+      let game = await Game.findOne({id: gameid}).catch(err => {
+        throw err;
+      });
+
+      if (!game) { // game not found, should not happen, return serverError
+        return env.res.serverError('Game was not found, contact the developer at ');
+      }
+      // broadcast the game to players, we are done.
+      await sails.sockets.broadcast(roomcode, 'startgame', game);
 
     }
 
-
-  },
+  }
 };
 

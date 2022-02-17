@@ -1,7 +1,7 @@
 {
   "name": "uitdagingapi",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Uitdaging API",
   "keywords": ["api", "uitdaging"],
   "dependencies": {
@@ -27,7 +27,7 @@
     "type": "git",
     "url": "git://github.com/gc/backend.git"
   },
-  "author": "GJ Collette",
+  "author": "GJ Collette (G0x209C)",
   "license": "",
   "engines": {
     "node": "^17.4"
