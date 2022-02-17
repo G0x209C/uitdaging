@@ -1,0 +1,30 @@
+{
+  "name": "uitdaging",
+  "version": "1.0.0",
+  "description": "Uitdaging platform in NodeJS",
+  "main": "vetur.config.js",
+  "scripts": {
+    "install": "cd ./frontend && npm i && cd ../backend && npm i && cd ..;",
+    "server":"cd ./backend && sails lift",
+    "client":"export NODE_OPTIONS=--openssl-legacy-provider; cd ./frontend && npm run serve",
+    "start":"concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G0x209C/uitdaging.git"
+  },
+  "keywords": [
+    "uitdaging",
+    "game",
+    "platform",
+    "vue",
+    "nodejs",
+    "sails"
+  ],
+  "author": "G0x209C",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/G0x209C/uitdaging/issues"
+  },
+  "homepage": "https://github.com/G0x209C/uitdaging#readme"
+}
